@@ -114,9 +114,20 @@
                 <Button Width="60px" Content="Search" x:Name="RightSearchDirButton" Click="RightSearchDirButton_Click" ></Button>
                 <Button Width="60px" Content="Drives" x:Name="RightDrivesButton" Click="RightDrivesButton_Click" ></Button>
             </WrapPanel>
-            <ListBox x:Name="RightListFile" Height="auto" MouseDoubleClick="RightListFile_MouseDoubleClick"
-                         Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            <ListBox ItemsSource="{Binding Items}" x:Name="RightListFile" Height="auto" 
+                     MouseDoubleClick="RightListFile_MouseDoubleClick" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="{Binding Image}" MaxWidth="20" MaxHeight="20" Margin="0,0,5,0"/>
+                            <TextBlock Text="{Binding Name}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
             </ListBox>
+            <!--<ListBox x:Name="RightListFile" Height="auto" MouseDoubleClick="RightListFile_MouseDoubleClick"
+                         Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+            </ListBox>-->
         </Grid>
         
         <Canvas Background="LightGray" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">

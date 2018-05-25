@@ -1,9 +1,13 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Drawing;
+
 
 namespace FileManager
 {
@@ -17,6 +21,8 @@ namespace FileManager
         public static string pathPaste = null; //полный путь вставляемого объекта (с названием файла)
         public static string thisName = null; // имя объекта с которым работаем (Select)
         public static string CutOrCopy = null; //"флаг" (да, с типом string) для метода, котрый определяет копир. или вырезать
+
+        public ObservableCollection<ItemModel> Items { get; set; } = new ObservableCollection<ItemModel>();
 
         public static void OutputDrives(ListBox listFiles, TextBox pathTextBox) // вывод всех дисков в ListBox
         {
@@ -126,9 +132,9 @@ namespace FileManager
                 }
             }
             catch (Exception ex) { MessageBox.Show("Произошла ошибка: " + ex.Message); }
-        } // не используется вроде нигле
+        } // не используется, пережиток времени
 
-         public static void UpInPath(ListBox listFiles, TextBox pathTextBox,  string pathText)
+        public static void UpInPath(ListBox listFiles, TextBox pathTextBox,  string pathText)
         {
             try
             {
@@ -163,11 +169,32 @@ namespace FileManager
                 foreach (DirectoryInfo ListDir in dirs)
                     listFiles.Items.Add(ListDir);
 
-                FileInfo[] files = dir.GetFiles();
+                //FileInfo[] files = dir.GetFiles();
 
-                foreach (FileInfo ListFiles in files)
-                    listFiles.Items.Add(ListFiles);
+                //foreach (FileInfo ListFiles in files)
+                //    listFiles.Items.Add(ListFiles);
+                ///////////////////////////////
+                var files = Directory.GetFiles(@"C:\Windows");
+                foreach (var file in files)
+                {
+                    ImageSource imageSource = null;
 
+                    FileInfo fileInfo = new FileInfo(file);
+
+                    Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(fileInfo.FullName);
+
+                    if (icon != null)
+                    {
+                        using (var bmp = icon.ToBitmap())
+                        {
+                            var stream = new MemoryStream();
+                            bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                            imageSource = BitmapFrame.Create(stream);
+                        }
+                    }
+
+                    Items.Add(new ItemModel(fileInfo.Name, imageSource));
+                }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
