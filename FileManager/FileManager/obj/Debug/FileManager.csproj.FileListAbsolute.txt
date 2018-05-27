@@ -35,6 +35,16 @@ D:\Artem\Dropbox\Универ\ООП\KProject\FileManager\FileManager\bin\Debug\
 D:\Artem\Dropbox\Универ\ООП\KProject\FileManager\FileManager\bin\Debug\EntityFramework.xml
 D:\Artem\Dropbox\Универ\ООП\KProject\FileManager\FileManager\bin\Debug\EntityFramework.SqlServer.xml
 D:\Artem\Dropbox\Универ\ООП\KProject\FileManager\FileManager\bin\Debug\ru\EntityFramework.resources.dll
+<<<<<<< HEAD
+=======
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.csprojResolveAssemblyReference.cache
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\MainWindow.g.cs
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\InputWin.g.cs
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\App.g.cs
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager_MarkupCompile.cache
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager_MarkupCompile.lref
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.pdb
+>>>>>>> master
 D:\Git\File_manager\FileManager\FileManager\bin\Debug\FileManager.exe.config
 D:\Git\File_manager\FileManager\FileManager\bin\Debug\FileManager.exe
 D:\Git\File_manager\FileManager\FileManager\bin\Debug\FileManager.pdb
@@ -43,12 +53,6 @@ D:\Git\File_manager\FileManager\FileManager\bin\Debug\EntityFramework.SqlServer.
 D:\Git\File_manager\FileManager\FileManager\bin\Debug\EntityFramework.xml
 D:\Git\File_manager\FileManager\FileManager\bin\Debug\EntityFramework.SqlServer.xml
 D:\Git\File_manager\FileManager\FileManager\bin\Debug\ru\EntityFramework.resources.dll
-D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.csprojResolveAssemblyReference.cache
-D:\Git\File_manager\FileManager\FileManager\obj\Debug\MainWindow.g.cs
-D:\Git\File_manager\FileManager\FileManager\obj\Debug\InputWin.g.cs
-D:\Git\File_manager\FileManager\FileManager\obj\Debug\App.g.cs
-D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager_MarkupCompile.cache
-D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager_MarkupCompile.lref
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\MainWindow.baml
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\InputWin.baml
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.g.resources
@@ -56,4 +60,3 @@ D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.Properties.Res
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.csproj.GenerateResource.Cache
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.csproj.CoreCompileInputs.cache
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.exe
-D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.pdb

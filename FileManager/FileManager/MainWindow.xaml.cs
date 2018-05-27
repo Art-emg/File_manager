@@ -294,11 +294,15 @@ namespace FileManager
             } //Back
             if (e.Key == Key.Enter)
             {
-                if (SelectedItemList.Name != null)
+                try
                 {
-                    ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
-
+                    if (SelectedItemList.Name != null)
+                    {
+                        ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
+                    }
                 }
+                catch (System.NullReferenceException) { }
+                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }// Enter
 
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.C)// Ctrl + C
