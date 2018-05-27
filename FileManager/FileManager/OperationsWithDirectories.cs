@@ -11,22 +11,22 @@ namespace FileManager
         static string dirNameCopy = ""; // имя папки которую копируем
         public static MainWindow mw;
 
-        public static void CopyDir(ListBox listItems)
+        public static void CopyDir(ListBox listItems, string selItem)
         {
             try
             {
-                dirNameCopy = listItems.SelectedValue.ToString();
+                dirNameCopy = selItem;
                 thisPath = Path.Combine(varListPath, dirNameCopy);
                 CutOrCopy = "Copy";
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        public static void CutDir(ListBox listItems)
+        public static void CutDir(ListBox listItems, string selItem)
         {
             try
             {
-                dirNameCopy = listItems.SelectedValue.ToString();
+                dirNameCopy = selItem;
                 thisPath = Path.Combine(varListPath, dirNameCopy);
                 CutOrCopy = "Cut";
             }
@@ -87,12 +87,12 @@ namespace FileManager
             }catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        public static void DeleteDir(ListBox listItems)
+        public static void DeleteDir(ListBox listItems, string selItem)
         {
             try
-            {   if (listItems.SelectedItem.ToString() != null)
+            {   if (selItem != null)
                 {
-                    thisPath = Path.Combine(varListPath, listItems.SelectedValue.ToString());
+                    thisPath = Path.Combine(varListPath, selItem);
                     if (Directory.GetDirectories(thisPath).Length + Directory.GetFiles(thisPath).Length > 0)
                     {
                         MessageBoxResult res = MessageBox.Show("Папка не пуста. Удалить папку?", "Предупреждение", MessageBoxButton.YesNo);
@@ -112,11 +112,11 @@ namespace FileManager
             }catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        public static void RenameDir(ListBox listItems, string renameText)
+        public static void RenameDir(ListBox listItems, string renameText, string selItem)
         {
             try
             {
-                thisName = Path.Combine(varListPath, listItems.SelectedValue.ToString());
+                thisName = Path.Combine(varListPath, selItem);
                 string thisRename = varListPath + "\\" + renameText;
                 Directory.Move(thisName, thisRename);
                 OutDirAndFiles(listItems, varListPath);

@@ -13,7 +13,7 @@ namespace FileManager
 {
     public class ListFiles : MainWindow
     {
-        public static MainWindow mw = null;
+        public static MainWindow mw = new MainWindow();
         public static ListFiles rlf = new ListFiles(); // создаем статический экз данного класса для работы с нестатичискими методами
         public static string varListPath = "";// путь , с которым работаем
 
@@ -22,16 +22,18 @@ namespace FileManager
         public static string thisName = null; // имя объекта с которым работаем (Select)
         public static string CutOrCopy = null; //"флаг" (да, с типом string) для метода, котрый определяет копир. или вырезать
 
-        public ObservableCollection<ItemModel> Items { get; set; } = new ObservableCollection<ItemModel>();
 
         public static void OutputDrives(ListBox listFiles, TextBox pathTextBox) // вывод всех дисков в ListBox
         {
             try
             {
-                listFiles.Items.Clear();
-                pathTextBox.Text = "";
-                foreach (string drive in Directory.GetLogicalDrives())
-                    listFiles.Items.Add(drive);
+                varListPath = "";
+                mw.RightSearchDirText.Text = varListPath;
+                MainWindow mainWin = new MainWindow();
+                //listFiles.Items.Clear();
+                //pathTextBox.Text = "";
+                //foreach (string drive in Directory.GetLogicalDrives())
+                //    listFiles.Items.Add(drive);
             }
             catch (Exception ex) { MessageBox.Show("Произошла ошибка: " + ex.Message); }
         }
@@ -51,34 +53,33 @@ namespace FileManager
             {
                 OutDirAndFiles(listFiles, FPath);
                 pathTextBox.Text = FPath;
-                ListFiles.varListPath = FPath;
-               
+                ListFiles.varListPath = FPath;  
 
             }
             catch ( System.UnauthorizedAccessException) {MessageBox.Show("Отказ в доступе", "Ошибка"); }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        public static void DB_ClickInList(ListBox listItems, TextBox pathTextBox)
+        public static void DB_ClickInList(ListBox listItems, TextBox pathTextBox, string SelItem)
         {
             try
-            {
-                if (listItems.SelectedItem.ToString() == "..")
+            { 
+                if (SelItem == "..")
                 {
                     UpInPath(listItems, pathTextBox, ListFiles.varListPath);
                 }
 
-                else if (Directory.Exists(Path.Combine(ListFiles.varListPath, listItems.SelectedItem.ToString())))
+                else if (Directory.Exists(Path.Combine(ListFiles.varListPath, SelItem)))
                 {
-                    ListFiles.varListPath = Path.Combine(ListFiles.varListPath, listItems.SelectedItem.ToString());
+                    ListFiles.varListPath = Path.Combine(ListFiles.varListPath, SelItem);
                     pathTextBox.Text = ListFiles.varListPath;
                     OutDirAndFiles(listItems, varListPath);
 
                 }
 
-                else if (File.Exists(Path.Combine(ListFiles.varListPath, listItems.SelectedItem.ToString())))
+                else if (File.Exists(Path.Combine(ListFiles.varListPath, SelItem)))
                 {
-                    Process.Start(Path.Combine(ListFiles.varListPath, listItems.SelectedItem.ToString()));
+                    Process.Start(Path.Combine(ListFiles.varListPath, SelItem));
                 }
             }
             catch (System.UnauthorizedAccessException) { MessageBox.Show("Отказ в доступе"); }
@@ -160,41 +161,41 @@ namespace FileManager
         {
             try
             {
-                listFiles.Items.Clear();
+                //listFiles.Items.Clear();
                 ListFiles.varListPath = pathDir;
-                DirectoryInfo dir = new DirectoryInfo(pathDir);
-                DirectoryInfo[] dirs = dir.GetDirectories();
+                
+                MainWindow mainWindow = new MainWindow(varListPath);
 
-                listFiles.Items.Add("..");
-                foreach (DirectoryInfo ListDir in dirs)
-                    listFiles.Items.Add(ListDir);
+
+                //DirectoryInfo dir = new DirectoryInfo(varListPath);
+                //DirectoryInfo[] dirs = dir.GetDirectories();
+
+                //listFiles.Items.Add("..");
+                //foreach (DirectoryInfo ListDir in dirs)
+                //    listFiles.Items.Add(ListDir);
 
                 //FileInfo[] files = dir.GetFiles();
 
                 //foreach (FileInfo ListFiles in files)
                 //    listFiles.Items.Add(ListFiles);
-                ///////////////////////////////
-                var files = Directory.GetFiles(@"C:\Windows");
-                foreach (var file in files)
-                {
-                    ImageSource imageSource = null;
 
-                    FileInfo fileInfo = new FileInfo(file);
+                //\\//\\//\\//\\//\\//\\//\\//\\//\\//\\
 
-                    Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(fileInfo.FullName);
+                //var dirs = Directory.GetDirectories(varListPath);
+                //foreach (var dir in dirs)
+                //{
+                //    String stringPath = "Images/folder.png";
+                //    Uri imageUri = new Uri(stringPath, UriKind.Relative);
+                //    BitmapImage imageBitmap = new BitmapImage(imageUri);
+                //    System.Windows.Controls.Image myImage = new System.Windows.Controls.Image();
+                //    myImage.Source = imageBitmap;
+                //    ImageSource imageSource = imageBitmap;
 
-                    if (icon != null)
-                    {
-                        using (var bmp = icon.ToBitmap())
-                        {
-                            var stream = new MemoryStream();
-                            bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
-                            imageSource = BitmapFrame.Create(stream);
-                        }
-                    }
+                //    FileInfo fileInfo = new FileInfo(dir);
+                //    ItemModel im = new ItemModel(fileInfo.Name, imageSource);
+                //    Items.Add(im);
+                //}
 
-                    Items.Add(new ItemModel(fileInfo.Name, imageSource));
-                }
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace FileManager
 {
@@ -12,18 +16,82 @@ namespace FileManager
     /// </summary>
     public partial class MainWindow : Window
     {
+        static public ObservableCollection<ItemModel> Items { get; set; } = new ObservableCollection<ItemModel>();
+        public ItemModel SelectedItemList { get; set; }
+
         public MainWindow()
         {
             InitializeComponent();
-        }
+            DataContext = this;
+
+            Items.Clear();
+            RightSearchDirText.Text = "";
+            foreach (string drive in Directory.GetLogicalDrives())
+            {
+                String stringPath = "Images/drive(dark).png";
+                Uri imageUri = new Uri(stringPath, UriKind.Relative);
+                BitmapImage imageBitmap = new BitmapImage(imageUri);
+                System.Windows.Controls.Image myImage = new System.Windows.Controls.Image();
+                myImage.Source = imageBitmap;
+                ImageSource imageSource = imageBitmap;
+
+                ItemModel im = new ItemModel(drive, imageSource);
+                Items.Add(im);
+            }
+        } // выводит список дисков
+
+        public MainWindow(string pathList)
+        {
+            InitializeComponent();
+            DataContext = this;
+            var dirs = Directory.GetDirectories(pathList);
+            Items.Clear();
+            ItemModel backdot = new ItemModel("..", null);
+            Items.Add(backdot);
+
+            foreach (var dir in dirs)
+            {
+                String stringPath = "Images/folder.png";
+                Uri imageUri = new Uri(stringPath, UriKind.Relative);
+                BitmapImage imageBitmap = new BitmapImage(imageUri);
+                System.Windows.Controls.Image myImage = new System.Windows.Controls.Image();
+                myImage.Source = imageBitmap;
+                ImageSource imageSource = imageBitmap;
+
+                FileInfo fileInfo = new FileInfo(dir);
+                ItemModel im = new ItemModel(fileInfo.Name, imageSource);
+                Items.Add(im);
+            }
+
+            var files = Directory.GetFiles(pathList);
+            foreach (var file in files)
+            {
+                ImageSource imageSource = null;
+
+                FileInfo fileInfo = new FileInfo(file);
+                Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(fileInfo.FullName);
+
+                if (icon != null)
+                {
+                    using (var bmp = icon.ToBitmap())
+                    {
+                        var stream = new MemoryStream();
+                        bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                        imageSource = BitmapFrame.Create(stream);
+                    }
+                }
+
+                Items.Add(new ItemModel(fileInfo.Name, imageSource));
+            }
+        } // выводит список папок и файлов
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             TreeViewLeft.mw = this;
             TreeViewLeft.StartCreateTree(FolderView);
-            ListFiles.OutputDrives(RightListFile, RightSearchDirText);
+            //ListFiles.OutputDrives(RightListFile, RightSearchDirText);
         }
-
+         
         #region TreeFiew дерево каталогов   
 
         private void ReloadTreeView_Click(object sender, RoutedEventArgs e)
@@ -38,14 +106,17 @@ namespace FileManager
 
         private void RightSearchDirButton_Click(object sender, RoutedEventArgs e)
         {
-            if(RightSearchDirText.Text != null|| RightSearchDirText.Text != "")
-                ListFiles.SearchDir(RightListFile, RightSearchDirText);
+            if (RightSearchDirText.Text != null && RightSearchDirText.Text != "")
+                ListFiles.OutDirAndFiles(RightListFile, RightSearchDirText.Text);
+
         }
 
         // двойной щелчек по ListBox элементу (отрытие папок, запуск файлов)
         private void RightListFile_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            ListFiles.DB_ClickInList(RightListFile, RightSearchDirText);
+           // MessageBox.Show(SelectedItemList.Name);
+
+            ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
         }
 
         //Вывод всех дисков в правый лист
@@ -70,31 +141,33 @@ namespace FileManager
             }
         }
 
+        
+
         #endregion
 
         #region операции с папками файлами 
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
-            if (RightListFile.SelectedValue != null)
+            if (SelectedItemList.Name != null)
             {
-                if (File.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                    OperationsWithFiles.CopyFile(RightListFile, "Copy");
+                if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
+                    OperationsWithFiles.CopyFile(RightListFile, "Copy", SelectedItemList.Name);
 
-                else if (Directory.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                    OperationsWithDirectories.CopyDir(RightListFile);
+                else if (Directory.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
+                    OperationsWithDirectories.CopyDir(RightListFile, SelectedItemList.Name);
             }
         }
 
         private void CutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (RightListFile.SelectedValue != null)
+            if (SelectedItemList.Name != null)
             {
-                if (File.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                    OperationsWithFiles.CopyFile(RightListFile, "Cut");
+                if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
+                    OperationsWithFiles.CopyFile(RightListFile, "Cut", SelectedItemList.Name);
 
-                else if (Directory.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                    OperationsWithDirectories.CutDir(RightListFile);
+                else if (Directory.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
+                    OperationsWithDirectories.CutDir(RightListFile, SelectedItemList.Name);
             }
         }
 
@@ -123,18 +196,18 @@ namespace FileManager
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (RightListFile.SelectedValue != null)
+            if (SelectedItemList.Name != null)
             {
-                string valid = Path.Combine(ListFiles.varListPath, RightListFile.SelectedValue.ToString());
+                string valid = Path.Combine(ListFiles.varListPath, SelectedItemList.Name);
                 if (valid != Directory.GetDirectoryRoot(valid))
                 {
-                    if (File.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedValue.ToString())))
+                    if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
                     {
-                        OperationsWithFiles.DeleteFile(RightListFile);
+                        OperationsWithFiles.DeleteFile(RightListFile, SelectedItemList.Name);
                     }
-                    else if (Directory.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedValue.ToString())))
+                    else if (Directory.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
                     {
-                        OperationsWithDirectories.DeleteDir(RightListFile);
+                        OperationsWithDirectories.DeleteDir(RightListFile, SelectedItemList.Name);
                     }
                 }
             }
@@ -144,9 +217,9 @@ namespace FileManager
         {
             try
             {
-                if (RightListFile.SelectedValue != null)
+                if (SelectedItemList.Name != null)
                 {
-                    string textForNewWin = "Переименовать \"" + RightListFile.SelectedValue.ToString() + "\"";
+                    string textForNewWin = "Переименовать \"" + SelectedItemList.Name + "\"";
                     InputWin renameWin = new InputWin(RightListFile, ListFiles.varListPath, textForNewWin);
                     renameWin.Owner = this;
                     renameWin.Show();
@@ -158,13 +231,13 @@ namespace FileManager
 
         public void Rename(string str)
         {
-            if (Directory.Exists(ListFiles.varListPath + "\\" + RightListFile.SelectedValue.ToString()))
+            if (Directory.Exists(ListFiles.varListPath + "\\" + SelectedItemList.Name))
             {
-                OperationsWithDirectories.RenameDir(RightListFile, str);
+                OperationsWithDirectories.RenameDir(RightListFile, str, SelectedItemList.Name);
             }
-            else if (File.Exists(ListFiles.varListPath + "\\" + RightListFile.SelectedValue.ToString()))
+            else if (File.Exists(ListFiles.varListPath + "\\" + SelectedItemList.Name))
             {
-                OperationsWithFiles.RenameFile(RightListFile, str);
+                OperationsWithFiles.RenameFile(RightListFile, str, SelectedItemList.Name);
             }
         }
 
@@ -199,18 +272,18 @@ namespace FileManager
         {
             if (e.Key == Key.Delete)
             {
-                if (RightListFile.SelectedValue != null)
+                if (SelectedItemList.Name != null)
                 {
-                    string valid = Path.Combine(ListFiles.varListPath, RightListFile.SelectedValue.ToString());
+                    string valid = Path.Combine(ListFiles.varListPath, SelectedItemList.Name);
                     if (valid != Directory.GetDirectoryRoot(valid))
                     {
-                        if (File.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedValue.ToString())))
+                        if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
                         {
-                            OperationsWithFiles.DeleteFile(RightListFile);
+                            OperationsWithFiles.DeleteFile(RightListFile, SelectedItemList.Name);
                         }
-                        else if (Directory.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedValue.ToString())))
+                        else if (Directory.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
                         {
-                            OperationsWithDirectories.DeleteDir(RightListFile);
+                            OperationsWithDirectories.DeleteDir(RightListFile, SelectedItemList.Name);
                         }
                     }
                 }
@@ -221,22 +294,22 @@ namespace FileManager
             } //Back
             if (e.Key == Key.Enter)
             {
-                if (RightListFile.SelectedValue != null)
+                if (SelectedItemList.Name != null)
                 {
-                    ListFiles.DB_ClickInList(RightListFile, RightSearchDirText);
+                    ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
 
                 }
             }// Enter
 
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.C)// Ctrl + C
             {
-                if (RightListFile.SelectedValue != null)
+                if (SelectedItemList.Name != null)
                 {
-                    if (File.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                        OperationsWithFiles.CopyFile(RightListFile, "Copy");
+                    if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
+                        OperationsWithFiles.CopyFile(RightListFile, "Copy", SelectedItemList.Name);
 
                     else if (Directory.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                        OperationsWithDirectories.CopyDir(RightListFile);
+                        OperationsWithDirectories.CopyDir(RightListFile, SelectedItemList.Name);
                 }
             }// Ctrl + C
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.X) // Ctrl + X
@@ -244,10 +317,10 @@ namespace FileManager
                 if (RightListFile.SelectedValue != null)
                 {
                     if (File.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                        OperationsWithFiles.CopyFile(RightListFile, "Cut");
+                        OperationsWithFiles.CopyFile(RightListFile, "Cut", SelectedItemList.Name);
 
                     else if (Directory.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
-                        OperationsWithDirectories.CutDir(RightListFile);
+                        OperationsWithDirectories.CutDir(RightListFile, SelectedItemList.Name);
                 }
             }// Ctrl + X
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.V) // Ctrl + V
@@ -276,9 +349,9 @@ namespace FileManager
             {
                 try
                 {
-                    if (RightListFile.SelectedValue != null)
+                    if (SelectedItemList.Name != null)
                     {
-                        string textForNewWin = "Переименовать \"" + RightListFile.SelectedValue.ToString() + "\"";
+                        string textForNewWin = "Переименовать \"" + SelectedItemList.Name + "\"";
                         InputWin renameWin = new InputWin(RightListFile, ListFiles.varListPath, textForNewWin);
                         renameWin.Owner = this;
                         renameWin.Show();
@@ -315,7 +388,7 @@ namespace FileManager
 
         private void zipButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-           // ListFiles.varListPath
+
         }
     }
 }

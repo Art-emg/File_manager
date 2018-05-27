@@ -7,12 +7,12 @@ namespace FileManager
 {
     public class OperationsWithFiles:ListFiles
     {
-        public static void CopyFile(ListBox listItems, string flag) // запись пути копируемого файла в "буфер"
+        public static void CopyFile(ListBox listItems, string flag, string selItem) // запись пути копируемого файла в "буфер"
         {
             try
-            {   if (listItems.SelectedItem.ToString() != "..")
+            {   if (selItem != "..")
                 {
-                    ListFiles.thisName = listItems.SelectedItem.ToString();
+                    ListFiles.thisName = selItem;
                     ListFiles.thisPath = Path.Combine(ListFiles.varListPath, ListFiles.thisName);
                     // MessageBox.Show(pathCopy);
                     ListFiles.CutOrCopy = flag;
@@ -66,27 +66,27 @@ namespace FileManager
             catch (Exception ex) { MessageBox.Show("Произошла ошибка: " + ex.Message); }
 }
 
-        public static void DeleteFile(ListBox listItems)
+        public static void DeleteFile(ListBox listItems, string selItem)
         {
             try
             {
 
-                    MessageBoxResult res = MessageBox.Show("Удалить " + listItems.SelectedItem.ToString() + " ?", "Предупреждение", MessageBoxButton.YesNo);
+                    MessageBoxResult res = MessageBox.Show("Удалить " + selItem + " ?", "Предупреждение", MessageBoxButton.YesNo);
                       if (res == MessageBoxResult.Yes)
                       {
-                        ListFiles.thisName = listItems.SelectedItem.ToString();
+                        ListFiles.thisName = selItem;
                         thisPath = Path.Combine(ListFiles.varListPath, ListFiles.thisName);
                         File.Delete(thisPath);
                         OutDirAndFiles(listItems, varListPath);
                       }
-                    else return;
+                      else return;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
-        public static void RenameFile(ListBox listItems, string renameText)
+        public static void RenameFile(ListBox listItems, string renameText, string selItem)
         {
-            thisName = Path.Combine(varListPath, listItems.SelectedValue.ToString());
+            thisName = Path.Combine(varListPath, selItem);
             string thisRename = varListPath + "\\" + renameText;
             File.Move(thisName, thisRename);
             OutDirAndFiles(listItems, varListPath);
