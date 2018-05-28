@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -18,7 +19,7 @@ namespace FileManager
     {
         static public ObservableCollection<ItemModel> Items { get; set; } = new ObservableCollection<ItemModel>();
         public ItemModel SelectedItemList { get; set; }
-
+        public bool PreviewCheck = false;
         public MainWindow()
         {
             InitializeComponent();
@@ -90,8 +91,17 @@ namespace FileManager
             TreeViewLeft.mw = this;
             TreeViewLeft.StartCreateTree(FolderView);
             //ListFiles.OutputDrives(RightListFile, RightSearchDirText);
+            RightListFile.MouseDown += RightListFile_MouseDown;
+            
+            
         }
-         
+
+        private void RightListFile_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            MessageBox.Show(SelectedItemList.Name);
+        }
+
+
         #region TreeFiew дерево каталогов   
 
         private void ReloadTreeView_Click(object sender, RoutedEventArgs e)
@@ -101,7 +111,7 @@ namespace FileManager
         }
 
         #endregion
-        
+
         #region Вывод файлов и папок в ListBox справа  
 
         private void RightSearchDirButton_Click(object sender, RoutedEventArgs e)
@@ -114,9 +124,11 @@ namespace FileManager
         // двойной щелчек по ListBox элементу (отрытие папок, запуск файлов)
         private void RightListFile_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-           // MessageBox.Show(SelectedItemList.Name);
-
-            ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
+            try
+            {
+                ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
+            }
+            catch (System.NullReferenceException) { }
         }
 
         //Вывод всех дисков в правый лист
@@ -141,7 +153,7 @@ namespace FileManager
             }
         }
 
-        
+
 
         #endregion
 
@@ -149,7 +161,7 @@ namespace FileManager
 
         private void CopyButton_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedItemList.Name != null)
+            if (RightListFile.SelectedItem != null && SelectedItemList.Name != "..")
             {
                 if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
                     OperationsWithFiles.CopyFile(RightListFile, "Copy", SelectedItemList.Name);
@@ -161,7 +173,7 @@ namespace FileManager
 
         private void CutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedItemList.Name != null)
+            if (RightListFile.SelectedItem != null && SelectedItemList.Name != "..")
             {
                 if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
                     OperationsWithFiles.CopyFile(RightListFile, "Cut", SelectedItemList.Name);
@@ -196,7 +208,7 @@ namespace FileManager
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            if (SelectedItemList.Name != null)
+            if (RightListFile.SelectedItem != null && SelectedItemList.Name != "..")
             {
                 string valid = Path.Combine(ListFiles.varListPath, SelectedItemList.Name);
                 if (valid != Directory.GetDirectoryRoot(valid))
@@ -217,7 +229,7 @@ namespace FileManager
         {
             try
             {
-                if (SelectedItemList.Name != null)
+                if (RightListFile.SelectedItem != null && SelectedItemList.Name != "..")
                 {
                     string textForNewWin = "Переименовать \"" + SelectedItemList.Name + "\"";
                     InputWin renameWin = new InputWin(RightListFile, ListFiles.varListPath, textForNewWin);
@@ -226,7 +238,7 @@ namespace FileManager
                     renameWin.Enter += Rename;
                     renameWin.Output += ListFiles.OutDirAndFiles;
                 }
-            }catch(Exception ex) { MessageBox.Show(ex.Message); }
+            } catch (Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         public void Rename(string str)
@@ -272,7 +284,7 @@ namespace FileManager
         {
             if (e.Key == Key.Delete)
             {
-                if (SelectedItemList.Name != null)
+                if (RightListFile.SelectedItem != null && SelectedItemList.Name != "..")
                 {
                     string valid = Path.Combine(ListFiles.varListPath, SelectedItemList.Name);
                     if (valid != Directory.GetDirectoryRoot(valid))
@@ -288,26 +300,21 @@ namespace FileManager
                     }
                 }
             }//Del
-            if(e.Key == Key.Back)
+            if (e.Key == Key.Back)
             {
                 ListFiles.UpInPath(RightListFile, RightSearchDirText, ListFiles.varListPath);
             } //Back
             if (e.Key == Key.Enter)
             {
-                try
+                if (RightListFile.SelectedItem != null)
                 {
-                    if (SelectedItemList.Name != null)
-                    {
-                        ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
-                    }
+                    ListFiles.DB_ClickInList(RightListFile, RightSearchDirText, SelectedItemList.Name);
                 }
-                catch (System.NullReferenceException) { }
-                catch (Exception ex) { MessageBox.Show(ex.Message); }
             }// Enter
 
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.C)// Ctrl + C
             {
-                if (SelectedItemList.Name != null)
+                if (RightListFile.SelectedItem != null && SelectedItemList.Name != "..")
                 {
                     if (File.Exists(Path.Combine(ListFiles.varListPath, SelectedItemList.Name)))
                         OperationsWithFiles.CopyFile(RightListFile, "Copy", SelectedItemList.Name);
@@ -318,7 +325,7 @@ namespace FileManager
             }// Ctrl + C
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.X) // Ctrl + X
             {
-                if (RightListFile.SelectedValue != null)
+                if (RightListFile.SelectedValue != null && SelectedItemList.Name != "..")
                 {
                     if (File.Exists(Path.Combine(ListFiles.varListPath, RightListFile.SelectedItem.ToString())))
                         OperationsWithFiles.CopyFile(RightListFile, "Cut", SelectedItemList.Name);
@@ -353,7 +360,7 @@ namespace FileManager
             {
                 try
                 {
-                    if (SelectedItemList.Name != null)
+                    if (RightListFile.SelectedItem != null && SelectedItemList.Name != "..")
                     {
                         string textForNewWin = "Переименовать \"" + SelectedItemList.Name + "\"";
                         InputWin renameWin = new InputWin(RightListFile, ListFiles.varListPath, textForNewWin);
@@ -374,7 +381,7 @@ namespace FileManager
                     addDirWin.Show();
                     addDirWin.Enter += OperationsWithDirectories.CreateDir;
                     addDirWin.Output += ListFiles.OutDirAndFiles;
-                } 
+                }
             }// Ctrl + D
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control && e.Key == Key.F)
             {
@@ -385,14 +392,129 @@ namespace FileManager
                     addDirWin.Show();
                     addDirWin.Enter += OperationsWithFiles.CreateFile;
                     addDirWin.Output += ListFiles.OutDirAndFiles;
-                } 
+                }
             }// Ctrl + F
         }
         #endregion
 
-        private void zipButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        private void zipButton_MouseLeftButtonDown(object sender, MouseButtonEventArgs e) // не готово еще !!!
         {
+            string startPath = @"D:\FM\1";
+            string zipPath = @"D:\FM\1.zip";
 
+            ZipFile.CreateFromDirectory(startPath, zipPath);
+
+            //ZipFile.ExtractToDirectory(zipPath, extractPath);
+
+        }
+
+        private void SearchButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (SearchTextBox.Text != "" && SearchTextBox.Text != null)
+            {
+                if (ListFiles.varListPath == "")
+                {
+                    MessageBox.Show($"Зайдите на диск, в котором нужно искать \"{SearchTextBox.Text}\"");
+                    return;
+                }
+                Items.Clear();
+                GetFileList(SearchTextBox.Text, ListFiles.varListPath);
+                //ListFiles.varListPath = "";
+                //RightSearchDirText.Text = ListFiles.varListPath;
+            }
+        }
+
+        private void GetFileList(string fileSearchPattern, string rootFolderPath)
+        {
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(rootFolderPath);
+            FileInfo[] files = di.GetFiles(fileSearchPattern, SearchOption.TopDirectoryOnly);
+            DirectoryInfo[] dirs = di.GetDirectories(fileSearchPattern, SearchOption.TopDirectoryOnly);
+
+            foreach (var dir in dirs)
+            {
+                #region перевод изображение в иконку
+                String stringPath = "Images/folder.png";
+                Uri imageUri = new Uri(stringPath, UriKind.Relative);
+                BitmapImage imageBitmap = new BitmapImage(imageUri);
+                System.Windows.Controls.Image myImage = new System.Windows.Controls.Image();
+                myImage.Source = imageBitmap;
+                ImageSource imageSource = imageBitmap;
+                #endregion
+
+                FileInfo fileInfo = new FileInfo(dir.FullName);
+                ItemModel im = new ItemModel(fileInfo.FullName, imageSource);
+                Items.Add(im);
+            }
+            foreach (var file in files)
+            {
+                ImageSource imageSource = null;
+
+                FileInfo fileInfo = new FileInfo(file.FullName);
+                Icon icon = System.Drawing.Icon.ExtractAssociatedIcon(fileInfo.FullName);
+
+                if (icon != null)
+                {
+                    using (var bmp = icon.ToBitmap())
+                    {
+                        var stream = new MemoryStream();
+                        bmp.Save(stream, System.Drawing.Imaging.ImageFormat.Png);
+                        imageSource = BitmapFrame.Create(stream);
+                    }
+                }
+
+                Items.Add(new ItemModel(fileInfo.FullName, imageSource));
+            }
+
+            DirectoryInfo[] diArr = di.GetDirectories();
+
+            foreach (DirectoryInfo info in diArr)
+            {
+                GetFileList(fileSearchPattern, info.FullName);
+            }
+        }catch(System.UnauthorizedAccessException){}
+    }
+
+         private void RightListFile_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (PreviewCheck == true)
+            {
+                if (RightListFile.SelectedIndex != -1)
+                {
+                    string rashir = Path.GetExtension(SelectedItemList.Name);
+                    if (rashir.ToUpper() == ".PNG" || rashir.ToUpper() == ".JPG" || rashir.ToUpper() == ".JPEG")
+                    {
+                        
+                        string stringPath = Path.Combine(ListFiles.varListPath, SelectedItemList.Name);
+                        previewImg.Source = BitmapFrame.Create(new Uri(stringPath));
+                    }
+                    else
+                    {
+                        previewImg.Source = null;
+                    }
+                }
+            }
+        }
+
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (HidZona.Visibility == Visibility.Hidden)
+            {
+                HidZona.Visibility = Visibility.Visible;
+                VisGrid.Width = new GridLength(200);
+                PreviewCheck = true;
+            }
+        }
+
+        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (HidZona.Visibility == Visibility.Visible)
+            {
+                HidZona.Visibility = Visibility.Hidden;
+                VisGrid.Width = new GridLength(0);
+                PreviewCheck = false;
+            }
         }
     }
 }
