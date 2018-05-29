@@ -35,6 +35,11 @@ namespace FileManager
                     }
                     OutDirAndFiles(listItems, varListPath);
 
+                    Change copyDB = new Change(DateTime.Now, "Copy File", thisPath, pathPaste);
+                    changeDatabaseEntities db = new changeDatabaseEntities();
+                    db.Change.Add(copyDB);
+                    db.SaveChanges();
+
                 }
 
             }

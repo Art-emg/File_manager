@@ -62,7 +62,7 @@
                 </Button>
                 <Separator />
                 <Button>
-                    <Button.ToolTip>Создать файл    (Ctrl + F)</Button.ToolTip>
+                    <Button.ToolTip>Архивировать</Button.ToolTip>
                     <Image x:Name="zipButton" MouseLeftButtonDown="zipButton_MouseLeftButtonDown"  Source="Images/zip.png" />
                 </Button>
                 <Separator />
@@ -136,7 +136,8 @@
                     <ColumnDefinition x:Name="VisGrid" Width="0"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <ListBox SelectedItem="{Binding SelectedItemList}" SelectionChanged="RightListFile_SelectionChanged"  ItemsSource="{Binding Items}" x:Name="RightListFile" Height="auto" 
-                     MouseDoubleClick="RightListFile_MouseDoubleClick" Grid.Row="0" Grid.Column="0">
+                     MouseDoubleClick="RightListFile_MouseDoubleClick" 
+                         Grid.Row="0" Grid.Column="0">
                     <ListBox.ItemTemplate >
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -154,9 +155,17 @@
                 </Grid>
             </Grid>
         </Grid>
-        
-        <Canvas Background="LightGray" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
-            <TextBlock FontSize='12px' Padding='2px' x:Name="InfoString" >Инфа о файле и т.д.</TextBlock>
-        </Canvas>
+        <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="100"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Canvas Background="LightGray" Grid.Column="0">
+                <TextBlock FontSize='12px' Padding='2px' x:Name="InfoString" ></TextBlock>
+            </Canvas>
+            <Button Grid.Column="1" x:Name="HistoryButton" Click="HistoryButton_Click">История</Button>
+            <Button Grid.Column="2" x:Name="ClearButton" Click="ClearButton_Click" >отчистить ист</Button>
+        </Grid>
     </Grid>
 </Window>

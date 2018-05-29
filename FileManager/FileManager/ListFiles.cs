@@ -30,10 +30,6 @@ namespace FileManager
                 varListPath = "";
                 mw.RightSearchDirText.Text = varListPath;
                 MainWindow mainWin = new MainWindow();
-                //listFiles.Items.Clear();
-                //pathTextBox.Text = "";
-                //foreach (string drive in Directory.GetLogicalDrives())
-                //    listFiles.Items.Add(drive);
             }
             catch (Exception ex) { MessageBox.Show("Произошла ошибка: " + ex.Message); }
         }

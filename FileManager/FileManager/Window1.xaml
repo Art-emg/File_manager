@@ -1,0 +1,29 @@
+﻿<Window x:Class="FileManager.Window1"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:FileManager"
+        mc:Ignorable="d"
+        Title="Истоиия изменеий" Height="300" Width="550" Loaded="Window_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+            <RowDefinition Height="20"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="100"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <DataGrid AutoGenerateColumns="False" x:Name="chan" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Id}" Header="Id" Width="30"/>
+                <DataGridTextColumn Binding="{Binding ChangeDate}" Header="Дата" Width="140"/>
+                <DataGridTextColumn Binding="{Binding ChangeType}" Header="Тип" Width="100"/>
+                <DataGridTextColumn Binding="{Binding ChangeFrom}" Header="Из" Width="100"/>
+                <DataGridTextColumn Binding="{Binding ChangeTo}" Header="В" Width="110"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button Grid.Column="1" Grid.Row="2" x:Name="ClearButton" Click="ClearButton_Click" >отчистить ист</Button>
+    </Grid>
+</Window>

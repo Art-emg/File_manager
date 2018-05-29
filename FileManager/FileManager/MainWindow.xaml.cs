@@ -4,6 +4,8 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
+using System.Data;
+using System.Data.SqlClient;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -19,6 +21,7 @@ namespace FileManager
     {
         static public ObservableCollection<ItemModel> Items { get; set; } = new ObservableCollection<ItemModel>();
         public ItemModel SelectedItemList { get; set; }
+        public SqlConnection sqlConnection;
         public bool PreviewCheck = false;
         public MainWindow()
         {
@@ -90,15 +93,17 @@ namespace FileManager
         {
             TreeViewLeft.mw = this;
             TreeViewLeft.StartCreateTree(FolderView);
-            //ListFiles.OutputDrives(RightListFile, RightSearchDirText);
-            RightListFile.MouseDown += RightListFile_MouseDown;
+           
+            //Change test1 = new Change();
+            //test1.Id = 1;
+            //test1.ChangeDate = DateTime.Now;
+            //test1.ChangeFrom = "testFrom";
+            //test1.ChangeTo = "testTo";
+            //test1.ChangeType = "testType";
+            //changeDatabaseEntities db = new changeDatabaseEntities();
+            //db.Change.Add(test1);
+            //db.SaveChanges();
             
-            
-        }
-
-        private void RightListFile_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            MessageBox.Show(SelectedItemList.Name);
         }
 
 
@@ -495,6 +500,8 @@ namespace FileManager
                     }
                 }
             }
+            if(SelectedItemList !=null)
+            InfoString.Text = Path.Combine(ListFiles.varListPath, SelectedItemList.Name);
         }
 
         private void ToggleButton_Checked(object sender, RoutedEventArgs e)
@@ -515,6 +522,21 @@ namespace FileManager
                 VisGrid.Width = new GridLength(0);
                 PreviewCheck = false;
             }
+        }
+
+        private void HistoryButton_Click(object sender, RoutedEventArgs e)
+        {
+            Window1 a = new Window1();
+            a.Show();
+        }
+
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
+        {
+            changeDatabaseEntities db = new changeDatabaseEntities();
+            //db.Change.Add(copyDB);
+            //db.SaveChanges();
+            db.Change.RemoveRange(db.Change);
+            db.SaveChanges();
         }
     }
 }

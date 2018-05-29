@@ -8,6 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/previewicon.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("changedatabase.mdf")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("changedatabase_log.ldf")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("modelchange.context.tt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("modelchange.tt")]
 
 

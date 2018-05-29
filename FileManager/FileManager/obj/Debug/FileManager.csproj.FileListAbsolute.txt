@@ -20,3 +20,8 @@ D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.csproj.CoreCom
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.exe
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.pdb
 D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager.csprojResolveAssemblyReference.cache
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\FileManager_Content.g.cs
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\Window1.g.cs
+D:\Git\File_manager\FileManager\FileManager\obj\Debug\Window1.baml
+D:\Git\File_manager\FileManager\FileManager\bin\Debug\changeDatabase.mdf
+D:\Git\File_manager\FileManager\FileManager\bin\Debug\changeDatabase_log.ldf
