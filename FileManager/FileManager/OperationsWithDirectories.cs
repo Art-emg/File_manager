@@ -46,6 +46,12 @@ namespace FileManager
                     }
                     else if (flag == "Copy")
                     {
+                        if(fullEndPathCopy == Path.Combine(thisPath, dirNameCopy))
+                        {
+                            MessageBox.Show("Нельзя копировать папку в саму себя");
+                            return;
+                        }
+
                         Directory.CreateDirectory(fullEndPathCopy);
                         copyDirAlgorithm(thisPath, fullEndPathCopy);
                     }
@@ -133,13 +139,20 @@ namespace FileManager
             {
                 thisName = Path.Combine(varListPath, selItem);
                 string thisRename = varListPath + "\\" + renameText;
-                Directory.Move(thisName, thisRename);
-                OutDirAndFiles(listItems, varListPath);
+                if (Directory.Exists(thisRename))
+                {
+                    MessageBox.Show("Каталог уже существует");
+                }
+                else
+                {
+                    Directory.Move(thisName, thisRename);
+                    OutDirAndFiles(listItems, varListPath);
 
-                Change renDB = new Change(DateTime.Now, "Rename directory", thisName, thisRename);
-                changeDatabaseEntities db = new changeDatabaseEntities();
-                db.Change.Add(renDB);
-                db.SaveChanges();
+                    Change renDB = new Change(DateTime.Now, "Rename directory", thisName, thisRename);
+                    changeDatabaseEntities db = new changeDatabaseEntities();
+                    db.Change.Add(renDB);
+                    db.SaveChanges();
+                }
             }
             catch(Exception ex) { MessageBox.Show(ex.Message); }
         }
@@ -148,11 +161,18 @@ namespace FileManager
         {
             try
             {
-                Directory.CreateDirectory(varListPath + "\\" + nameDir);
-                Change creDB = new Change(DateTime.Now, "Create directory", null, varListPath + "\\" + nameDir);
-                changeDatabaseEntities db = new changeDatabaseEntities();
-                db.Change.Add(creDB);
-                db.SaveChanges();
+                if (Directory.Exists(varListPath + "\\" + nameDir))
+                {
+                    MessageBox.Show("Каталог уже существует");
+                }
+                else
+                {
+                    Directory.CreateDirectory(varListPath + "\\" + nameDir);
+                    Change creDB = new Change(DateTime.Now, "Create directory", null, varListPath + "\\" + nameDir);
+                    changeDatabaseEntities db = new changeDatabaseEntities();
+                    db.Change.Add(creDB);
+                    db.SaveChanges();
+                }
             }
             //catch (System.NullReferenceException) { }
             catch (Exception ex) { MessageBox.Show(ex.Message); }

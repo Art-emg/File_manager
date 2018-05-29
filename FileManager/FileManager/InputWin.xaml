@@ -6,10 +6,10 @@
         xmlns:local="clr-namespace:FileManager"
         mc:Ignorable="d" 
         Loaded="Window_Loaded"
-        Title="" Height="130" Width="300" ResizeMode="NoResize">
-    <Grid>
+        Title="" Height="140" Width="300" ResizeMode="NoResize">
+    <Grid Margin="0 10 0 0 ">
         <TextBlock x:Name="TitleWin" HorizontalAlignment="Left" Height="22" Margin="10,0,0,0" VerticalAlignment="Top" Width="274"/>
         <TextBox  x:Name="inputText" Height="23" Margin="10,27,10,0" VerticalAlignment="Top" KeyDown="inputText_KeyPress"/>
-        <Button Content="Подтвердить" KeyDown="inputText_KeyPress" HorizontalAlignment="Left" Height="26" Margin="176,55,10,10" VerticalAlignment="Top" Width="100" Click="Button_Click"/>
+        <Button Content="Подтвердить" KeyDown="inputText_KeyPress" Height="26" Margin="0 0 10 10" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" Click="Button_Click"/>
     </Grid>
 </Window>

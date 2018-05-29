@@ -155,6 +155,7 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>ModelChange.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <None Include="ClassDiagram1.cd" />
     <None Include="ModelChange.edmx.diagram">
       <DependentUpon>ModelChange.edmx</DependentUpon>
     </None>
@@ -218,6 +219,8 @@
       <DependentUpon>changeDatabase.mdf</DependentUpon>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Images\decompression.png" />
+    <Resource Include="Images\rightArrow.png" />
     <Content Include="ModelChange.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>ModelChange.edmx</DependentUpon>

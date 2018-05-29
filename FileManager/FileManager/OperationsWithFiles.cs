@@ -107,14 +107,22 @@ namespace FileManager
         public static void RenameFile(ListBox listItems, string renameText, string selItem)
         {
             thisName = Path.Combine(varListPath, selItem);
-            string thisRename = varListPath + "\\" + renameText;
-            File.Move(thisName, thisRename);
-            OutDirAndFiles(listItems, varListPath);
+            string thisExp = Path.GetExtension(thisName);
+            string thisRename = varListPath + "\\" + renameText + thisExp;
+            if (File.Exists(thisRename))
+            {
+                MessageBox.Show("Файл уже существует");
+            }
+            else
+            {
+                File.Move(thisName, thisRename);
+                OutDirAndFiles(listItems, varListPath);
 
-            Change renDB = new Change(DateTime.Now, "Rename File", thisName, thisRename);
-            changeDatabaseEntities db = new changeDatabaseEntities();
-            db.Change.Add(renDB);
-            db.SaveChanges();
+                Change renDB = new Change(DateTime.Now, "Rename File", thisName, thisRename);
+                changeDatabaseEntities db = new changeDatabaseEntities();
+                db.Change.Add(renDB);
+                db.SaveChanges();
+            }
         }
 
         public static void CreateFile(string nameFile)

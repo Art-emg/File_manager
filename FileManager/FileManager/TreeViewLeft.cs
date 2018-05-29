@@ -12,6 +12,7 @@ namespace FileManager
 {
     public class TreeViewLeft
     {
+        
         public static MainWindow mw = null;
         #region начало создания дерева, создает корневые элементы, и вызывает метода для дальнейшей работы
 
@@ -27,6 +28,7 @@ namespace FileManager
                     //Устанавливает полны путь
                     Tag = drive
                 };
+
                 // Добавляет пустой подэлемент
                 item.Items.Add(null);
 
@@ -57,9 +59,15 @@ namespace FileManager
             //получаем полный путь
             string fullPath = (string)item.Tag;
 
-            //создаем список для каталогов
-            List<string> directories = new List<string>();
+                //создаем список для каталогов
+                List<string> directories = new List<string>();
 
+            try
+            {
+                if (Directory.GetDirectories(fullPath).Length > 100)
+                 return;
+            }
+            catch (Exception ex) { MessageBox.Show(ex.Message); }
             // получаем каталоги из папки, обходя ошибки
             try
             {

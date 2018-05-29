@@ -45,10 +45,17 @@ namespace FileManager
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            if (!String.IsNullOrEmpty(inputText.Text))
-                Enter(inputText.Text);
+            if (inputText.Text.Contains("/") || inputText.Text.Contains("\\") || inputText.Text.Contains(":") || inputText.Text.Contains("*") || inputText.Text.Contains("\"") || inputText.Text.Contains("?") || inputText.Text.Contains("<") || inputText.Text.Contains(">") || inputText.Text.Contains("|"))
+            {
+                MessageBox.Show("Строка имеет недопустимое значение");
+            }
+            else
+            {
+                if (!String.IsNullOrEmpty(inputText.Text))
+                    Enter(inputText.Text);
                 Output(lb, path);
-            this.Close();
+                this.Close();
+            }
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
@@ -61,20 +68,6 @@ namespace FileManager
 
         private void inputText_KeyPress(object sender, KeyEventArgs e)
         {
-
-            Regex pat = new Regex(@"^[a-zA-Z0-9]{4,10}$");
-            bool b = pat.IsMatch(e.Key.ToString());
-            if (b != false)
-            {
-                e.Handled = true;
-            }
-            if (e.Key == Key.Enter)
-            {
-                if (!String.IsNullOrEmpty(inputText.Text))
-                    Enter(inputText.Text);
-                Output(lb, path);
-                this.Close();
-            }
         }
     }
 }

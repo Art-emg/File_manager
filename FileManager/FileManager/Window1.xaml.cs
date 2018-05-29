@@ -20,25 +20,23 @@ namespace FileManager
     /// </summary>
     public partial class Window1 : Window
     {
-        changeDatabaseEntities db;
+        
         public Window1()
         {
-                    InitializeComponent();
-   
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
+            InitializeComponent();
             changeDatabaseEntities db = new changeDatabaseEntities();
             db.Change.Load();
             chan.ItemsSource = db.Change.Local.ToBindingList();
         }
 
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             changeDatabaseEntities db = new changeDatabaseEntities();
-            //db.Change.Add(copyDB);
-            //db.SaveChanges();
             db.Change.RemoveRange(db.Change);
             db.SaveChanges();
             db.Change.Load();
