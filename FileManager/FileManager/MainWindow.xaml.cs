@@ -533,10 +533,16 @@ namespace FileManager
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             changeDatabaseEntities db = new changeDatabaseEntities();
-            //db.Change.Add(copyDB);
-            //db.SaveChanges();
             db.Change.RemoveRange(db.Change);
             db.SaveChanges();
+        }
+
+        private void FolderView_Drop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+                e.Effects = DragDropEffects.Copy;
+            else
+                e.Effects = DragDropEffects.None;
         }
     }
 }

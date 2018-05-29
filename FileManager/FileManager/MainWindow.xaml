@@ -7,7 +7,7 @@
         Loaded="Window_Loaded"
         KeyDown="Window_KeyDown"
         mc:Ignorable="d"
-        Title="File Manager" Height="500" Width="800" Icon="Images/manager.png">
+        Title="File Manager" Height="500" Width="800" Icon="Images/manager.png" MinWidth="500">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="200px"  MinWidth="90 px"/> 
@@ -84,7 +84,7 @@
                 Height="20px" Width="auto" HorizontalAlignment="Left" VerticalAlignment="Top" Panel.ZIndex="1">
             <Image Source="Images/reload.png"/>
         </Button>
-            <TreeView x:Name="FolderView" Grid.Row="1" Grid.Column="0" Padding="0 20 0 0" >
+            <TreeView  DragDrop.Drop="FolderView_Drop" x:Name="FolderView" Grid.Row="1" Grid.Column="0" Padding="0 20 0 0" >
                 <TreeView.Resources>
                     <Style TargetType="{x:Type TreeViewItem}">
                         <Setter Property="HeaderTemplate">
@@ -158,14 +158,12 @@
         <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition></ColumnDefinition>
-                <ColumnDefinition Width="100"></ColumnDefinition>
-                <ColumnDefinition Width="100"></ColumnDefinition>
+                <ColumnDefinition Width="80"></ColumnDefinition>
             </Grid.ColumnDefinitions>
             <Canvas Background="LightGray" Grid.Column="0">
                 <TextBlock FontSize='12px' Padding='2px' x:Name="InfoString" ></TextBlock>
             </Canvas>
             <Button Grid.Column="1" x:Name="HistoryButton" Click="HistoryButton_Click">История</Button>
-            <Button Grid.Column="2" x:Name="ClearButton" Click="ClearButton_Click" >отчистить ист</Button>
         </Grid>
     </Grid>
 </Window>

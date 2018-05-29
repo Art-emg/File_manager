@@ -23,23 +23,26 @@ namespace FileManager
         changeDatabaseEntities db;
         public Window1()
         {
-            
-            InitializeComponent();
-            
-            
-                
+                    InitializeComponent();
+   
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            db = new changeDatabaseEntities();
+            changeDatabaseEntities db = new changeDatabaseEntities();
             db.Change.Load();
             chan.ItemsSource = db.Change.Local.ToBindingList();
         }
 
         private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
-
+            changeDatabaseEntities db = new changeDatabaseEntities();
+            //db.Change.Add(copyDB);
+            //db.SaveChanges();
+            db.Change.RemoveRange(db.Change);
+            db.SaveChanges();
+            db.Change.Load();
+            chan.ItemsSource = db.Change.Local.ToBindingList();
         }
     }
 }

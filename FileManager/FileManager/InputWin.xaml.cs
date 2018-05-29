@@ -62,7 +62,7 @@ namespace FileManager
         private void inputText_KeyPress(object sender, KeyEventArgs e)
         {
 
-            Regex pat = new Regex(@"\\");
+            Regex pat = new Regex(@"^[a-zA-Z0-9]{4,10}$");
             bool b = pat.IsMatch(e.Key.ToString());
             if (b != false)
             {

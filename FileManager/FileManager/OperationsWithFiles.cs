@@ -49,6 +49,11 @@ namespace FileManager
                 if (res == MessageBoxResult.Yes)
                 {
                     File.Copy(thisPath, pathPaste, true);
+
+                    Change copyDB = new Change(DateTime.Now, "Copy File (replace)", thisPath, pathPaste);
+                    changeDatabaseEntities db = new changeDatabaseEntities();
+                    db.Change.Add(copyDB);
+                    db.SaveChanges();
                 }
                 else { return; }
             }
@@ -62,6 +67,11 @@ namespace FileManager
                 pathPaste = Path.Combine(varListPath + "\\" + ListFiles.thisName);
                 File.Move(thisPath, pathPaste);
                 OutDirAndFiles(listItems, varListPath);
+
+                Change cutDB = new Change(DateTime.Now, "Cut File", thisPath, pathPaste);
+                changeDatabaseEntities db = new changeDatabaseEntities();
+                db.Change.Add(cutDB);
+                db.SaveChanges();
             }
             catch (System.IO.IOException)
             {
@@ -83,7 +93,12 @@ namespace FileManager
                         thisPath = Path.Combine(ListFiles.varListPath, ListFiles.thisName);
                         File.Delete(thisPath);
                         OutDirAndFiles(listItems, varListPath);
-                      }
+
+                        Change delDB = new Change(DateTime.Now, "Delete File", thisPath, null);
+                        changeDatabaseEntities db = new changeDatabaseEntities();
+                        db.Change.Add(delDB);
+                        db.SaveChanges();
+                }
                       else return;
             }
             catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -95,6 +110,11 @@ namespace FileManager
             string thisRename = varListPath + "\\" + renameText;
             File.Move(thisName, thisRename);
             OutDirAndFiles(listItems, varListPath);
+
+            Change renDB = new Change(DateTime.Now, "Rename File", thisName, thisRename);
+            changeDatabaseEntities db = new changeDatabaseEntities();
+            db.Change.Add(renDB);
+            db.SaveChanges();
         }
 
         public static void CreateFile(string nameFile)
@@ -102,6 +122,10 @@ namespace FileManager
             try
             {
                 File.Create(varListPath + "\\" + nameFile);
+                Change creDB = new Change(DateTime.Now, "Rename File", null, varListPath + "\\" + nameFile);
+                changeDatabaseEntities db = new changeDatabaseEntities();
+                db.Change.Add(creDB);
+                db.SaveChanges();
             }
             //catch (System.NullReferenceException) { }
             catch (Exception ex) { MessageBox.Show(ex.Message); }

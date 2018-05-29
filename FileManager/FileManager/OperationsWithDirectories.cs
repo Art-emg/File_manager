@@ -50,6 +50,11 @@ namespace FileManager
                         copyDirAlgorithm(thisPath, fullEndPathCopy);
                     }
                     OutDirAndFiles(listItems, varListPath);
+
+                    Change copyDB = new Change(DateTime.Now, flag + " directory", thisPath, fullEndPathCopy);
+                    changeDatabaseEntities db = new changeDatabaseEntities();
+                    db.Change.Add(copyDB);
+                    db.SaveChanges();
                 }
             }catch (Exception ex) { MessageBox.Show(ex.Message); }
 
@@ -100,6 +105,11 @@ namespace FileManager
                         {
                             Directory.Delete(thisPath, true);
                             OutDirAndFiles(listItems, varListPath);
+
+                            Change delDB = new Change(DateTime.Now,"Delete directory", thisPath, null);
+                            changeDatabaseEntities db = new changeDatabaseEntities();
+                            db.Change.Add(delDB);
+                            db.SaveChanges();
                         }
                         else { return; }
                     }
@@ -107,6 +117,11 @@ namespace FileManager
                     {
                         Directory.Delete(thisPath);
                         OutDirAndFiles(listItems, varListPath);
+
+                        Change delDB = new Change(DateTime.Now, "Delete directory", thisPath, null);
+                        changeDatabaseEntities db = new changeDatabaseEntities();
+                        db.Change.Add(delDB);
+                        db.SaveChanges();
                     }
                 }
             }catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -120,7 +135,13 @@ namespace FileManager
                 string thisRename = varListPath + "\\" + renameText;
                 Directory.Move(thisName, thisRename);
                 OutDirAndFiles(listItems, varListPath);
-            }catch(Exception ex) { MessageBox.Show(ex.Message); }
+
+                Change renDB = new Change(DateTime.Now, "Rename directory", thisName, thisRename);
+                changeDatabaseEntities db = new changeDatabaseEntities();
+                db.Change.Add(renDB);
+                db.SaveChanges();
+            }
+            catch(Exception ex) { MessageBox.Show(ex.Message); }
         }
 
         public static void CreateDir(string nameDir)
@@ -128,6 +149,10 @@ namespace FileManager
             try
             {
                 Directory.CreateDirectory(varListPath + "\\" + nameDir);
+                Change creDB = new Change(DateTime.Now, "Create directory", null, varListPath + "\\" + nameDir);
+                changeDatabaseEntities db = new changeDatabaseEntities();
+                db.Change.Add(creDB);
+                db.SaveChanges();
             }
             //catch (System.NullReferenceException) { }
             catch (Exception ex) { MessageBox.Show(ex.Message); }

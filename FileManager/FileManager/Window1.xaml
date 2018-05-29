@@ -13,17 +13,17 @@
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition></ColumnDefinition>
-            <ColumnDefinition Width="100"></ColumnDefinition>
+            <ColumnDefinition Width="120"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <DataGrid AutoGenerateColumns="False" x:Name="chan" Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2" Grid.RowSpan="2">
             <DataGrid.Columns>
-                <DataGridTextColumn Binding="{Binding Id}" Header="Id" Width="30"/>
+                <!--<DataGridTextColumn Binding="{Binding Id}" Header="Id" Width="30"/>-->
                 <DataGridTextColumn Binding="{Binding ChangeDate}" Header="Дата" Width="140"/>
                 <DataGridTextColumn Binding="{Binding ChangeType}" Header="Тип" Width="100"/>
-                <DataGridTextColumn Binding="{Binding ChangeFrom}" Header="Из" Width="100"/>
-                <DataGridTextColumn Binding="{Binding ChangeTo}" Header="В" Width="110"/>
+                <DataGridTextColumn Binding="{Binding ChangeFrom}" Header="Из" Width="150"/>
+                <DataGridTextColumn Binding="{Binding ChangeTo}" Header="В" Width="150"/>
             </DataGrid.Columns>
         </DataGrid>
-        <Button Grid.Column="1" Grid.Row="2" x:Name="ClearButton" Click="ClearButton_Click" >отчистить ист</Button>
+        <Button Grid.Column="1" Grid.Row="2" x:Name="ClearButton" Click="ClearButton_Click" >Отчистить историю</Button>
     </Grid>
 </Window>
