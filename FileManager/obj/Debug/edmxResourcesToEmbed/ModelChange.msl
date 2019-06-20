@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Хранилище changeDatabaseModelContainer" CdmEntityContainer="changeDatabaseEntities">
+    <EntitySetMapping Name="Change">
+      <EntityTypeMapping TypeName="changeDatabaseModel.Change">
+        <MappingFragment StoreEntitySet="Change">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="ChangeDate" ColumnName="ChangeDate" />
+          <ScalarProperty Name="ChangeType" ColumnName="ChangeType" />
+          <ScalarProperty Name="ChangeFrom" ColumnName="ChangeFrom" />
+          <ScalarProperty Name="ChangeTo" ColumnName="ChangeTo" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>
